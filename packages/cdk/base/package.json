@@ -1,0 +1,41 @@
+{
+	"name": "@lacolombemons/cdk-base",
+	"version": "0.0.0",
+	"description": "BaseStack CDK des projets La Colombe Mons : tags communs, protection contre la suppression, partage entre stacks via SSM.",
+	"license": "UNLICENSED",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base.git",
+		"directory": "packages/cdk/base"
+	},
+	"main": "./build/index.js",
+	"types": "./build/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"files": [
+		"build"
+	],
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"scripts": {
+		"build": "tsc --build",
+		"package": "mkdir -p dist/js && yarn pack --out dist/js/cdk-base.tgz"
+	},
+	"peerDependencies": {
+		"aws-cdk-lib": "^2.274.0",
+		"constructs": "^10.8.1"
+	},
+	"devDependencies": {
+		"@lacolombemons/tsconfig": "workspace:^",
+		"@types/node": "^26",
+		"aws-cdk-lib": "2.275.0",
+		"constructs": "^10.8.1",
+		"typescript": "~7.0.2"
+	}
+}

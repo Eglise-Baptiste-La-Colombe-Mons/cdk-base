@@ -1,0 +1,23 @@
+# dependencies
+node_modules
+.yarn/*
+!.yarn/releases
+.pnp.*
+
+# build
+build/
+dist/
+cdk.out/
+*.tsbuildinfo
+.turbo
+
+# testing
+coverage
+
+# misc
+.DS_Store
+.idea
+.env*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
