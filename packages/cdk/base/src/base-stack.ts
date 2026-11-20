@@ -2,22 +2,12 @@ import { Stack, type StackProps, Tags } from "aws-cdk-lib";
 import type { Construct } from "constructs";
 
 export interface BaseStackProps extends StackProps {
-	/** Nom court du projet, en minuscules (ex. `ecodim`). Valeur du tag `Project`. */
 	readonly project: string;
-
-	/** Stage du déploiement (ex. `prod`, `staging`). Facultatif. Valeur du tag `Stage`. */
 	readonly stage?: string;
 }
 
 const PROJECT_PATTERN = /^[a-z][a-z0-9-]*$/;
 
-/**
- * Stack de base des projets La Colombe Mons.
- *
- * - Tags communs : `Project`, `Stage` (si défini), `ManagedBy=cdk`.
- * - Protection contre la suppression par défaut, sauf pour un stage autre que `prod`.
- *   `terminationProtection` reste prioritaire s'il est passé explicitement.
- */
 export abstract class BaseStack extends Stack {
 	readonly project: string;
 	readonly stage?: string;

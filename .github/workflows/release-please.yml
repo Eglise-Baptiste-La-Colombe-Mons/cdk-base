@@ -31,13 +31,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # trusted publishing npm (OIDC) + provenance
+      id-token: write
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/yarn-install
-      - run: npm install -g npm@latest # trusted publishing exige npm >= 11.5
+      - run: npm install -g npm@latest
       - run: yarn build
-      # yarn pack remplace les dépendances `workspace:` par les versions publiées.
       - name: Pack public workspaces
         run: yarn workspaces foreach --all --no-private exec 'mkdir -p dist && yarn pack --out dist/package.tgz'
       - name: Publish to npm
