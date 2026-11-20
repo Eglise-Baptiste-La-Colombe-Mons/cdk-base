@@ -6,7 +6,7 @@ Repo public. Les packages sont publiés sur le registre npm public, sous le scop
 
 | Package | Contenu |
 | --- | --- |
-| [`@lacolombemons/cdk-base`](packages/cdk/base) | `BaseStack` : tags communs, protection contre la suppression, partage entre stacks via SSM |
+| [`@lacolombemons/cdk-base`](packages/cdk/base) | `BaseStack` : tags communs, protection contre la suppression |
 | [`@lacolombemons/aws-constructs`](packages/cdk/aws-constructs) | Constructs AWS avec les réglages par défaut issus d'ecodim (un dossier par service) |
 | `packages/tools/tsconfig` | tsconfig commun aux packages (privé) |
 

@@ -1,7 +1,7 @@
 {
 	"name": "@lacolombemons/cdk-base",
 	"version": "0.0.0",
-	"description": "BaseStack CDK des projets La Colombe Mons : tags communs, protection contre la suppression, partage entre stacks via SSM.",
+	"description": "BaseStack CDK des projets La Colombe Mons : tags communs et protection contre la suppression.",
 	"license": "UNLICENSED",
 	"repository": {
 		"type": "git",
