@@ -34,13 +34,8 @@ jobs:
       id-token: write # trusted publishing npm (OIDC) + provenance
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org
+      - uses: ./.github/actions/yarn-install
       - run: npm install -g npm@latest # trusted publishing exige npm >= 11.5
-      - run: corepack enable
-      - run: yarn install --immutable
       - run: yarn build
       # yarn pack remplace les dépendances `workspace:` par les versions publiées.
       - name: Pack public workspaces

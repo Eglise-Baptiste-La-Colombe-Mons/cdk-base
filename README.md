@@ -14,8 +14,8 @@ Repo public. Les packages sont publiés sur le registre npm public, sous le scop
 
 ```bash
 yarn install
-yarn build      # compile tous les packages (turbo)
-yarn lint       # biome check
+yarn build      
+yarn lint      
 yarn lint:fix
 ```
 
