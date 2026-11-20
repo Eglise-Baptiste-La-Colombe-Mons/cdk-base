@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "main"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "deps(github-actions):"
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "main"
+    versioning-strategy: increase
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "deps(node):"
+    groups:
+      cdk:
+        patterns:
+          - "*cdk*"
+          - "constructs"
+      types:
+        patterns:
+          - "@types/*"
+      tools:
+        patterns:
+          - "turbo"
+          - "husky"
+          - "typescript"
+          - "@biomejs/*"

@@ -1,0 +1,62 @@
+{
+	"$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+	"release-type": "node",
+	"bump-minor-pre-major": true,
+	"include-component-in-tag": true,
+	"group-pull-request-title-pattern": "chore: release ${version}",
+	"changelog-sections": [
+		{
+			"type": "feat",
+			"section": "Features"
+		},
+		{
+			"type": "fix",
+			"section": "Bug Fixes"
+		},
+		{
+			"type": "refactor",
+			"section": "Code Refactoring"
+		},
+		{
+			"type": "docs",
+			"section": "Documentation"
+		},
+		{
+			"type": "deps",
+			"section": "Dependencies"
+		},
+		{
+			"type": "ci",
+			"section": "Continuous Integration"
+		},
+		{
+			"type": "revert",
+			"section": "Reverts"
+		},
+		{
+			"type": "chore",
+			"section": "Miscellaneous Chores",
+			"hidden": true
+		}
+	],
+	"packages": {
+		".": {
+			"component": "cdk-base"
+		},
+		"packages/cdk/base": {
+			"component": "base",
+			"skip-github-release": true
+		},
+		"packages/cdk/aws-constructs": {
+			"component": "aws-constructs",
+			"skip-github-release": true
+		}
+	},
+	"plugins": [
+		{
+			"type": "linked-versions",
+			"groupName": "@lacolombemons",
+			"components": ["cdk-base", "base", "aws-constructs"]
+		}
+	]
+}

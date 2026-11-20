@@ -1,0 +1,5 @@
+{
+	".": "0.0.0",
+	"packages/cdk/base": "0.0.0",
+	"packages/cdk/aws-constructs": "0.0.0"
+}
