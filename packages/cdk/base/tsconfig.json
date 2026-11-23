@@ -1,9 +1,0 @@
-{
-	"extends": "@lacolombemons/tsconfig/base.json",
-	"compilerOptions": {
-		"rootDir": "src",
-		"outDir": "build"
-	},
-	"include": ["src"],
-	"exclude": ["build"]
-}

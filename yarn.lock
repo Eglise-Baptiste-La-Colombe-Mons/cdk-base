@@ -182,21 +182,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lacolombemons/cdk-base@workspace:packages/cdk/base":
-  version: 0.0.0-use.local
-  resolution: "@lacolombemons/cdk-base@workspace:packages/cdk/base"
-  dependencies:
-    "@lacolombemons/tsconfig": "workspace:^"
-    "@types/node": "npm:^26"
-    aws-cdk-lib: "npm:2.277.0"
-    constructs: "npm:^10.8.1"
-    typescript: "npm:~7.0.2"
-  peerDependencies:
-    aws-cdk-lib: ^2.274.0
-    constructs: ^10.8.1
-  languageName: unknown
-  linkType: soft
-
 "@lacolombemons/tsconfig@workspace:^, @lacolombemons/tsconfig@workspace:packages/tools/tsconfig":
   version: 0.0.0-use.local
   resolution: "@lacolombemons/tsconfig@workspace:packages/tools/tsconfig"
