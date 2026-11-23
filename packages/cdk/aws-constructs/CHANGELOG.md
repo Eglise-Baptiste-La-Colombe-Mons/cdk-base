@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.3.0...aws-constructs-v0.4.0) (2026-11-23)
+
+
+### Features
+
+* **aws-constructs:** add lambda NodejsFunction construct ([#12](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/issues/12)) ([65af32c](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/commit/65af32cdd8482fd8fad9e732185319852aff373c))
+
 ## [0.3.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.2.0...aws-constructs-v0.3.0) (2026-11-23)
 
 

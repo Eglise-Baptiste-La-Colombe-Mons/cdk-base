@@ -1,6 +1,6 @@
 {
 	"name": "@lacolombemons/aws-constructs",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"description": "Constructs AWS CDK des projets La Colombe Mons, avec les réglages par défaut issus d'ecodim.",
 	"license": "UNLICENSED",
 	"repository": {
