@@ -44,10 +44,6 @@
 		".": {
 			"component": "cdk-base"
 		},
-		"packages/cdk/base": {
-			"component": "base",
-			"skip-github-release": true
-		},
 		"packages/cdk/aws-constructs": {
 			"component": "aws-constructs",
 			"skip-github-release": true
@@ -57,7 +53,7 @@
 		{
 			"type": "linked-versions",
 			"groupName": "@lacolombemons",
-			"components": ["cdk-base", "base", "aws-constructs"]
+			"components": ["cdk-base", "aws-constructs"]
 		}
 	]
 }
