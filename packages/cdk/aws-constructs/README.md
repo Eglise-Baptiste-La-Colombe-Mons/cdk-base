@@ -127,6 +127,33 @@ new route53.AliasRecordPair(this, "EcodimSiteAliasRecord", {
 });
 ```
 
+### `s3.Bucket`
+
+Bucket S3 privé.
+
+| Prop             | Défaut                                                     |
+|------------------|------------------------------------------------------------|
+| `encryption`     | `S3_MANAGED`                                               |
+| `versioned`      | `true`                                                     |
+| `lifecycleRules` | suppression des versions non courantes après 30 jours      |
+| `removalPolicy`  | `RETAIN`                                                   |
+
+Réglages imposés, absents des props :
+
+- `blockPublicAccess` : `BLOCK_ALL`. Un site statique est servi par CloudFront, jamais directement par S3.
+- `enforceSSL` : les requêtes non chiffrées sont refusées.
+- `minimumTLSVersion` : `1.2`.
+
+Le versioning permet de récupérer un fichier écrasé ou supprimé pendant 30 jours. Passer `lifecycleRules` remplace la
+règle par défaut : la reprendre si on veut la garder.
+
+```ts
+import { s3 } from "@lacolombemons/aws-constructs";
+
+new s3.Bucket(this, "EcodimSiteBucket");
+new s3.Bucket(this, "Uploads", {versioned: false, lifecycleRules: []});
+```
+
 ## Ajouter un construct
 
 1. Une branche par construct : `feat/add-<service>-<construct>-construct`.
