@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.1.0...base-v0.2.0) (2026-11-23)
+
+
+### Miscellaneous Chores
+
+* **base:** Synchronize [@lacolombemons](https://github.com/lacolombemons) versions
+
 ## 0.1.0 (2026-11-23)
 
 
