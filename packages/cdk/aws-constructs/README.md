@@ -15,6 +15,26 @@ src/
     └── <construct>.ts
 ```
 
+## Constructs
+
+### `cloudwatch.LogGroup`
+
+Log group pour les logs applicatifs (Lambda, logs d'accès API Gateway, déploiements S3).
+
+| Prop            | Défaut         | Pourquoi                                                                   |
+|-----------------|----------------|----------------------------------------------------------------------------|
+| `retention`     | `THREE_MONTHS` | assez pour diagnostiquer un incident, sans conserver des logs indéfiniment |
+| `removalPolicy` | `DESTROY`      | les logs ne sont pas des données métier : supprimés avec la stack          |
+
+Toutes les props de `aws_logs.LogGroup` restent disponibles et priment sur ces défauts.
+
+```ts
+import {cloudwatch} from "@lacolombemons/aws-constructs";
+
+new cloudwatch.LogGroup(this, "GuardianFunctionLogGroup");
+new cloudwatch.LogGroup(this, "SiteDeploymentLogs", {retention: RetentionDays.ONE_MONTH});
+```
+
 ## Ajouter un construct
 
 1. Une branche par construct : `feat/add-<service>-<construct>-construct`.
