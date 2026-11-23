@@ -1,5 +1,5 @@
 {
-	".": "0.3.0",
-	"packages/cdk/base": "0.3.0",
-	"packages/cdk/aws-constructs": "0.3.0"
+	".": "0.4.0",
+	"packages/cdk/base": "0.4.0",
+	"packages/cdk/aws-constructs": "0.4.0"
 }
