@@ -39,6 +39,45 @@ new cloudwatch.LogGroup(this, "GuardianFunctionLogGroup");
 new cloudwatch.LogGroup(this, "SiteDeploymentLogs", {retention: RetentionDays.ONE_MONTH});
 ```
 
+### `dynamodb.Table` et `dynamodb.EphemeralTable`
+
+Tables DynamoDB basées sur `TableV2` (ressource CloudFormation `AWS::DynamoDB::GlobalTable`).
+
+| Prop                               | `Table` (données métier) | `EphemeralTable` (sessions, liens, compteurs) |
+|------------------------------------|--------------------------|-----------------------------------------------|
+| `billing`                          | à la demande             | à la demande                                  |
+| `pointInTimeRecoverySpecification` | activée                  | —                                             |
+| `deletionProtection`               | `true`                   | —                                             |
+| `removalPolicy`                    | `RETAIN`                 | `DESTROY`                                     |
+| `timeToLiveAttribute`              | —                        | `expiresAt`                                   |
+
+Conventions imposées par les deux constructs :
+
+- **Pas de `tableName`.** La prop n'existe pas : CloudFormation génère un nom unique. Une évolution qui remplace la
+  table (changement de clé) crée simplement une nouvelle table, sans suffixe de version à gérer. Le code applicatif
+  reçoit le nom par variable d'environnement (`table.tableName`).
+- **Références faibles entre stacks.** Une table passée à une autre stack est lue avec `Fn::GetStackOutput`, sans
+  export CloudFormation : la table peut être remplacée sans être bloquée par la stack consommatrice. Partager une
+  table se fait donc par référence (`props.tables.child`), jamais en la réimportant par son nom.
+
+Passer de `aws_dynamodb.Table` à ce construct, ou retirer un `tableName`, remplace la table : il faut migrer les
+données.
+
+```ts
+import {dynamodb} from "@lacolombemons/aws-constructs";
+
+const children = new dynamodb.Table(this, "Children", {
+    partitionKey: {name: "childId", type: AttributeType.STRING},
+    globalSecondaryIndexes: [
+        {indexName: "bySurname", partitionKey: {name: "surnameKey", type: AttributeType.STRING}},
+    ],
+});
+
+const sessions = new dynamodb.EphemeralTable(this, "Sessions", {
+    partitionKey: {name: "sessionId", type: AttributeType.STRING},
+});
+```
+
 ### `lambda.NodejsFunction`
 
 Fonction Lambda TypeScript bundlée avec esbuild, avec les réglages communs des projets.
