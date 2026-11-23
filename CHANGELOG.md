@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.4.0...cdk-base-v0.5.0) (2026-11-23)
+
+
+### Features
+
+* **aws-constructs:** add dynamodb Table and EphemeralTable constructs ([#14](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/issues/14)) ([c9ff53b](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/commit/c9ff53b7aa870d7adb19fbc8a6d0e8cc63a8c55e))
+
 ## [0.4.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.3.0...cdk-base-v0.4.0) (2026-11-23)
 
 
