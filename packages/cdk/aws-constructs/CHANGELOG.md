@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.1.0...aws-constructs-v0.2.0) (2026-11-23)
+
+
+### Features
+
+* **aws-constructs:** add cloudwatch LogGroup construct ([#8](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/issues/8)) ([0d6911b](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/commit/0d6911b4c54007f8e5a2f3a58582f1dc681f8d40))
+
 ## 0.1.0 (2026-11-23)
 
 
