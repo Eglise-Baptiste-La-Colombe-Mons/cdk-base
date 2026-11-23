@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.2.0...cdk-base-v0.3.0) (2026-11-23)
+
+
+### Features
+
+* **aws-constructs:** add route53 AliasRecordPair construct ([#10](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/issues/10)) ([e4e5b22](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/commit/e4e5b22a373dc9ddc2aa4a49cbda9b42d9a8ec6c))
+
 ## [0.2.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.1.0...cdk-base-v0.2.0) (2026-11-23)
 
 
