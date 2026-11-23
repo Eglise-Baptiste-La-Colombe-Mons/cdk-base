@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.5.0...aws-constructs-v0.6.0) (2026-11-23)
+
+
+### Features
+
+* **aws-constructs:** add s3 Bucket construct ([#16](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/issues/16)) ([c2e874f](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/commit/c2e874f02d145d9362f6308159227dd5dbc29314))
+
 ## [0.5.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.4.0...aws-constructs-v0.5.0) (2026-11-23)
 
 
