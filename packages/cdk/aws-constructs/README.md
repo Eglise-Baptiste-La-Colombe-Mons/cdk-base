@@ -1,7 +1,11 @@
 # @lacolombemons/aws-constructs
 
 Constructs AWS CDK partagés par les projets La Colombe Mons. Chaque construct étend la ressource `aws-cdk-lib`
-correspondante avec les réglages par défaut repris d'ecodim. Les props passées par le projet restent prioritaires.
+correspondante avec les réglages par défaut repris d'ecodim.
+
+Règle commune à tous les constructs : une prop passée par le projet remplace entièrement la valeur par défaut, sans
+fusion. Par exemple, passer `bundling: { sourceMap: true }` à `lambda.NodejsFunction` remplace `{ minify: true }` :
+il faut repasser `minify: true` pour le garder.
 
 ## Organisation
 
@@ -35,6 +39,35 @@ new cloudwatch.LogGroup(this, "GuardianFunctionLogGroup");
 new cloudwatch.LogGroup(this, "SiteDeploymentLogs", {retention: RetentionDays.ONE_MONTH});
 ```
 
+### `lambda.NodejsFunction`
+
+Fonction Lambda TypeScript bundlée avec esbuild, avec les réglages communs des projets.
+
+| Prop           | Défaut                                                                     |
+|----------------|----------------------------------------------------------------------------|
+| `runtime`      | `NODEJS_24_X`                                                              |
+| `architecture` | `ARM_64`                                                                   |
+| `memorySize`   | `1024`                                                                     |
+| `timeout`      | 10 secondes                                                                |
+| `bundling`     | `{ minify: true }`                                                         |
+| `logGroup`     | `cloudwatch.LogGroup` créé à côté de la fonction, avec l'id `<id>LogGroup` |
+
+Le log group est créé dans le même scope que la fonction et non comme enfant : les logical IDs restent ceux d'une
+fonction et d'un log group créés directement dans la stack.
+
+`grantReadSecureParameters(...names)` autorise la lecture de paramètres SSM `SecureString` (`ssm:GetParameter` sur
+ces paramètres, `kms:Decrypt` limité à l'usage via SSM dans la région de la stack).
+
+```ts
+import {lambda} from "@lacolombemons/aws-constructs";
+
+const fn = new lambda.NodejsFunction(this, "EventFunction", {
+    entry: path.join(routersDir, "events.ts"),
+    environment: {EVENTBRITE_TOKEN_PARAM: tokenParamName},
+});
+fn.grantReadSecureParameters(tokenParamName);
+```
+
 ### `route53.AliasRecordPair`
 
 Enregistrements `A` (IPv4) et `AAAA` (IPv6) vers la même cible alias, pour une distribution CloudFront ou un domaine
@@ -46,12 +79,12 @@ enregistrements créés directement dans la stack, ce qui permet de remplacer du
 enregistrements DNS.
 
 ```ts
-import { route53 } from "@lacolombemons/aws-constructs";
+import {route53} from "@lacolombemons/aws-constructs";
 
 new route53.AliasRecordPair(this, "EcodimSiteAliasRecord", {
-	zone: props.hostedZone,
-	recordName: props.domainName,
-	target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
+    zone: props.hostedZone,
+    recordName: props.domainName,
+    target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
 });
 ```
 
