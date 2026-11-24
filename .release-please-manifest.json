@@ -1,4 +1,4 @@
 {
-	".": "0.9.0",
-	"packages/cdk/aws-constructs": "0.9.0"
+	".": "0.9.1",
+	"packages/cdk/aws-constructs": "0.9.1"
 }

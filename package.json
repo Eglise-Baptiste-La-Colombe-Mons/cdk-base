@@ -1,6 +1,6 @@
 {
 	"name": "cdk-base",
-	"version": "0.9.0",
+	"version": "0.9.1",
 	"private": true,
 	"license": "UNLICENSED",
 	"packageManager": "yarn@4.18.1",
