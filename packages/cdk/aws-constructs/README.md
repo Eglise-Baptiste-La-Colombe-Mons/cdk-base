@@ -21,6 +21,56 @@ src/
 
 ## Constructs
 
+### `cloudfront.SecurityHeadersPolicy`
+
+Response headers policy CloudFront avec les en-têtes de sécurité d'un site. Tous les en-têtes sont en
+`override: true` : ils remplacent ceux que renverrait l'origine.
+
+La CSP par défaut vise une SPA servie depuis son propre domaine : scripts, polices et requêtes limités au domaine
+du site, images aussi en `data:`, styles inline autorisés (`'unsafe-inline'`, nécessaire aux styles injectés par les
+frameworks), aucun objet embarqué, et le site ne peut pas être affiché dans une iframe.
+
+```
+default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';
+connect-src 'self' <connectSrc>; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+```
+
+| En-tête                      | Défaut                                                         | Pourquoi                                                 |
+|------------------------------|----------------------------------------------------------------|----------------------------------------------------------|
+| `Content-Security-Policy`    | CSP ci-dessus                                                  | limite ce que la page peut charger et exécuter           |
+| `X-Content-Type-Options`     | `nosniff`                                                      | le navigateur respecte le `Content-Type` déclaré         |
+| `X-Frame-Options`            | `DENY`                                                         | pas d'affichage dans une iframe (clickjacking)           |
+| `Referrer-Policy`            | `strict-origin-when-cross-origin`                              | seule l'origine est envoyée aux autres sites             |
+| `Strict-Transport-Security`  | 365 jours, sans `includeSubdomains` ni `preload`               | HTTPS obligatoire, sans engager les autres sous-domaines |
+| `X-XSS-Protection`           | désactivé (`0`)                                                | filtre obsolète des navigateurs, remplacé par la CSP     |
+| `Permissions-Policy`         | `camera=(), microphone=(), geolocation=(), payment=(), usb=()` | API du navigateur inutiles à un site désactivées         |
+| `Cross-Origin-Opener-Policy` | `same-origin`                                                  | isole la fenêtre des pages ouvertes depuis un autre site |
+| `X-Robots-Tag`               | absent, `noindex` avec `noIndex: true`                         | pas d'indexation des environnements de staging           |
+
+Props propres au construct :
+
+- `connectSrc` : origines ajoutées après `'self'` dans `connect-src`, typiquement l'API du site.
+- `noIndex` (défaut `false`) : ajoute `X-Robots-Tag: noindex`, en dernier.
+- `contentSecurityPolicy` : remplace entièrement la CSP par défaut. `connectSrc` est alors ignoré : inclure les
+  origines de l'API dans la CSP passée.
+- `permissionsPolicy` : remplace la valeur par défaut de `Permissions-Policy`.
+
+`securityHeadersBehavior` et `customHeadersBehavior` sont gérés par le construct et absents des props. Les autres
+props de `aws_cloudfront.ResponseHeadersPolicy` (`responseHeadersPolicyName`, `comment`, `corsBehavior`,
+`removeHeaders`, `serverTimingSamplingRate`) restent disponibles.
+
+Le construct est la ressource `AWS::CloudFront::ResponseHeadersPolicy` elle-même : avec le même id, il remplace une
+`ResponseHeadersPolicy` existante sans changer son logical ID ni son nom.
+
+```ts
+import {cloudfront} from "@lacolombemons/aws-constructs";
+
+const responseHeadersPolicy = new cloudfront.SecurityHeadersPolicy(this, "EcodimResponseHeaders", {
+    connectSrc: [`https://${props.apiDomainName}`],
+    noIndex: props.noIndex,
+});
+```
+
 ### `cloudwatch.LogGroup`
 
 Log group pour les logs applicatifs (Lambda, logs d'accès API Gateway, déploiements S3).
