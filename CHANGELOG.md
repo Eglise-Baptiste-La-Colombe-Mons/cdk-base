@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.7.0...cdk-base-v0.8.0) (2026-11-24)
+
+
+### Features
+
+* **aws-constructs:** add iam GithubOidcProvider and GithubDeployRole constructs ([#25](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/issues/25)) ([eb97048](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/commit/eb97048dfc782f387e6403cd5658bec3f8fed00b))
+
 ## [0.7.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.6.0...cdk-base-v0.7.0) (2026-11-24)
 
 
