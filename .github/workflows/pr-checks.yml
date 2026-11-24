@@ -20,6 +20,7 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/yarn-install
       - run: yarn build
+      - run: yarn test
 
   biome:
     runs-on: ubuntu-latest

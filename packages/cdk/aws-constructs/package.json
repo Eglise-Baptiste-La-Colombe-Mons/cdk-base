@@ -25,7 +25,8 @@
 	},
 	"scripts": {
 		"build": "tsc --build",
-		"package": "mkdir -p dist/js && yarn pack --out dist/js/aws-constructs.tgz"
+		"package": "mkdir -p dist/js && yarn pack --out dist/js/aws-constructs.tgz",
+		"test": "vitest run"
 	},
 	"peerDependencies": {
 		"aws-cdk-lib": "^2.274.0",
@@ -36,6 +37,8 @@
 		"@types/node": "^26",
 		"aws-cdk-lib": "2.277.0",
 		"constructs": "^10.8.1",
-		"typescript": "~7.0.2"
+		"typescript": "~7.0.2",
+		"vite": "^8.3.8",
+		"vitest": "^5.1.1"
 	}
 }
