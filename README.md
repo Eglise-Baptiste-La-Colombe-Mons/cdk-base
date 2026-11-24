@@ -4,16 +4,17 @@ Constructs et stacks CDK partagés par les projets de La Colombe Mons (ecodim-ap
 Monorepo structuré comme `constructs` (Necko) : yarn workspaces, turbo, biome, release-please.
 Repo public. Les packages sont publiés sur le registre npm public, sous le scope `@lacolombemons`.
 
-| Package | Contenu |
-| --- | --- |
+| Package                                                        | Contenu                                                                             |
+|----------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | [`@lacolombemons/aws-constructs`](packages/cdk/aws-constructs) | Constructs AWS avec les réglages par défaut issus d'ecodim (un dossier par service) |
-| `packages/tools/tsconfig` | tsconfig commun aux packages (privé) |
+| `packages/tools/tsconfig`                                      | tsconfig commun aux packages (privé)                                                |
 
 ## Commandes
 
 ```bash
 yarn install
-yarn build      
+yarn build
+yarn test
 yarn lint      
 yarn lint:fix
 ```
@@ -21,7 +22,11 @@ yarn lint:fix
 ## Workflow
 
 Une branche par construct (`feat/add-<service>-<construct>-construct`), une PR, une release.
-Chaque construct est ensuite intégré dans ecodim par un bump de version, un par un.
+Chaque construct a ses tests (vitest, dans `test/<service>/<construct>.test.ts`), ajoutés dans la même PR
+que le construct. `yarn test` les lance, et la CI aussi.
+
+Chaque construct est ensuite intégré dans ecodim par un bump de version, un par un. Le `cdk diff` de
+l'intégration doit être vide ou entièrement expliqué, et il est vérifié sur staging avant la prod.
 
 Le hook husky `pre-push` lance `yarn ci` (biome). Les titres de PR doivent suivre Conventional Commits.
 
