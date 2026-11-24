@@ -21,6 +21,48 @@ src/
 
 ## Constructs
 
+### `apigatewayv2.HttpApi`
+
+API HTTP API Gateway avec throttling et logs d'accès sur le stage par défaut (`$default`).
+
+| Prop              | Défaut                                                        | Pourquoi                                                           |
+|-------------------|---------------------------------------------------------------|--------------------------------------------------------------------|
+| `throttle`        | `{ rateLimit: 30, burstLimit: 60 }`                           | une API publique est limitée contre les abus et les coûts imprévus |
+| `routeThrottles`  | aucune                                                        | limites plus strictes sur les routes sensibles                     |
+| `accessLogGroup`  | `cloudwatch.LogGroup` créé à côté, avec l'id `<id>AccessLogs` | les logs d'accès servent à diagnostiquer un incident               |
+| `accessLogFormat` | JSON, voir ci-dessous                                         | une ligne par requête, lisible dans CloudWatch Logs Insights       |
+
+Le format par défaut contient, dans cet ordre : `requestId`, `requestTime`, `ip` (`$context.identity.sourceIp`),
+`routeKey`, `status`, `latency` (`$context.responseLatency`), `integrationLatency` et `integrationError`
+(`$context.integrationErrorMessage`).
+
+`routeThrottles` prend des clés au format `"METHOD /path"`, comme les route keys d'API Gateway. Toutes les props de
+`aws_apigatewayv2.HttpApi` (domaine, CORS, autorisation) restent disponibles, sans défaut.
+
+Le log group est créé dans le même scope que l'API et non comme enfant, comme celui de `lambda.NodejsFunction`. Pour
+garder un log group existant sous son id, le créer dans le projet et le passer en `accessLogGroup`.
+
+Avec `createDefaultStage: false`, il n'y a pas de stage à configurer : le construct ne crée rien de plus, et passer
+`throttle`, `routeThrottles`, `accessLogGroup` ou `accessLogFormat` lève une erreur.
+
+CDK n'expose ni le throttling ni les logs d'accès pour le stage par défaut d'une `HttpApi`, et pas du tout les limites
+par route : le construct les pose sur le `CfnStage` (`defaultStage.node.defaultChild`).
+
+```ts
+import {apigatewayv2, cloudwatch} from "@lacolombemons/aws-constructs";
+
+const httpApi = new apigatewayv2.HttpApi(this, "EcodimHttpApi", {
+    defaultDomainMapping: {domainName},
+    accessLogGroup: new cloudwatch.LogGroup(this, "EcodimApiAccessLogs"),
+    routeThrottles: {
+        "POST /v1/auth/request-link": {rateLimit: 5, burstLimit: 20},
+    },
+});
+```
+
+Ici, `POST /v1/auth/request-link` envoie un email : sa limite basse protège contre l'envoi massif d'emails. Le même
+réglage convient à une route de connexion.
+
 ### `cloudfront.SecurityHeadersPolicy`
 
 Response headers policy CloudFront avec les en-têtes de sécurité d'un site. Tous les en-têtes sont en
