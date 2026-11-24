@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.6.0...aws-constructs-v0.7.0) (2026-11-24)
+
+
+### Features
+
+* **aws-constructs:** add cloudfront SecurityHeadersPolicy construct ([#23](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/issues/23)) ([f2a2e1c](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/commit/f2a2e1c1921bb76308c1202466878871e932a2a5))
+
 ## [0.6.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.5.0...aws-constructs-v0.6.0) (2026-11-23)
 
 
