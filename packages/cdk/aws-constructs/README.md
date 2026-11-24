@@ -265,26 +265,6 @@ const fn = new lambda.NodejsFunction(this, "EventFunction", {
 fn.grantReadSecureParameters(tokenParamName);
 ```
 
-### `route53.AliasRecordPair`
-
-Enregistrements `A` (IPv4) et `AAAA` (IPv6) vers la même cible alias, pour une distribution CloudFront ou un domaine
-API Gateway en dual-stack.
-
-Le construct est l'enregistrement `A`. L'enregistrement `AAAA` est créé à côté, dans le même scope, avec l'id
-`<id>V6`, et exposé dans `ipv6Record`. Il n'y a pas de construct parent : les logical IDs restent ceux de deux
-enregistrements créés directement dans la stack, ce qui permet de remplacer du code existant sans recréer les
-enregistrements DNS.
-
-```ts
-import {route53} from "@lacolombemons/aws-constructs";
-
-new route53.AliasRecordPair(this, "EcodimSiteAliasRecord", {
-    zone: props.hostedZone,
-    recordName: props.domainName,
-    target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
-});
-```
-
 ### `s3.Bucket`
 
 Bucket S3 privé.
