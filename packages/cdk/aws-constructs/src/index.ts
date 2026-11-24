@@ -1,3 +1,4 @@
+export * as apigatewayv2 from "./apigatewayv2";
 export * as cloudfront from "./cloudfront";
 export * as cloudwatch from "./cloudwatch";
 export * as dynamodb from "./dynamodb";
