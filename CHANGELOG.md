@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.8.0...cdk-base-v0.9.0) (2026-11-24)
+
+
+### Features
+
+* **aws-constructs:** add apigatewayv2 HttpApi construct ([#27](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/issues/27)) ([9ba1e03](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/commit/9ba1e03a88ea59b5c249a6db75bc41a66f4bc394))
+
 ## [0.8.0](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.7.0...cdk-base-v0.8.0) (2026-11-24)
 
 
