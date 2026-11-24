@@ -1,3 +1,4 @@
+export * as cloudfront from "./cloudfront";
 export * as cloudwatch from "./cloudwatch";
 export * as dynamodb from "./dynamodb";
 export * as lambda from "./lambda";
