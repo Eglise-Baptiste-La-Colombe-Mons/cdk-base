@@ -128,6 +128,72 @@ const sessions = new dynamodb.EphemeralTable(this, "Sessions", {
 });
 ```
 
+### `iam.GithubOidcProvider` et `iam.GithubDeployRole`
+
+Déploiement CDK depuis GitHub Actions sans clé AWS stockée : le workflow obtient un jeton OIDC de GitHub et assume
+le rôle de déploiement.
+
+Il y a deux constructs parce qu'un compte AWS ne peut avoir qu'un seul provider OIDC pour
+`token.actions.githubusercontent.com`. Le premier projet du compte crée le provider. Les suivants l'importent par son
+ARN et créent seulement leur rôle.
+
+`iam.GithubOidcProvider` est le provider OIDC de GitHub Actions : URL `https://token.actions.githubusercontent.com`
+et client ID `sts.amazonaws.com`, imposés. Seul `oidcProviderName` reste disponible.
+
+`iam.GithubDeployRole` est le rôle assumé par le workflow.
+
+| Prop                 | Défaut      | Pourquoi                                                                     |
+|----------------------|-------------|------------------------------------------------------------------------------|
+| `provider`           | (requis)    | provider créé par `GithubOidcProvider`, ou importé par ARN                   |
+| `repository`         | (requis)    | `owner`, `ownerId`, `name`, `id` du repo autorisé                            |
+| `branch`             | `main`      | seuls les workflows de cette branche peuvent déployer                        |
+| `cdkQualifier`       | `hnb659fds` | qualifier par défaut du bootstrap CDK                                        |
+| `roleName`           | généré      |                                                                              |
+| `maxSessionDuration` | 1 heure     | un déploiement tient dans l'heure, le jeton n'est pas valable plus longtemps |
+
+Le rôle ne fait qu'une chose : `sts:AssumeRole` sur `arn:aws:iam::<account>:role/cdk-<qualifier>-*`, les rôles
+créés par `cdk bootstrap`. Les permissions de déploiement sont celles de ces rôles, pas du rôle GitHub.
+
+La trust policy exige `token.actions.githubusercontent.com:aud` = `sts.amazonaws.com` et :
+
+```
+token.actions.githubusercontent.com:sub = repo:<owner>@<ownerId>/<name>@<id>:ref:refs/heads/<branch>
+```
+
+Les identifiants numériques protègent contre un repo supprimé puis recréé sous le même nom par quelqu'un d'autre :
+le nouveau repo a un autre `id`, et son jeton est refusé. Ce format est celui des *immutable subject claims* de GitHub
+Actions. Il doit être activé sur l'organisation ou le repo (API `PUT /orgs/{org}/actions/oidc/customization/sub` ou
+`PUT /repos/{owner}/{repo}/actions/oidc/customization/sub` avec `use_immutable_subject: true`). Les repos créés depuis
+le 15 juillet 2026 l'ont par défaut. Sans lui, le `sub` reçu est `repo:<owner>/<name>:…` et le rôle refuse le jeton.
+
+Pour trouver `ownerId` et `id` :
+
+```bash
+gh api repos/<owner>/<repo> --jq '.owner.id, .id'
+```
+
+```ts
+import {iam} from "@lacolombemons/aws-constructs";
+
+const provider = new iam.GithubOidcProvider(this, "GithubOidcProvider");
+const role = new iam.GithubDeployRole(this, "GithubDeployRole", {
+    provider,
+    repository: {owner: "Eglise-Baptiste-La-Colombe-Mons", ownerId: "…", name: "ecodim-app", id: "…"},
+    roleName: "ecodim-github-deploy",
+});
+```
+
+Second projet dans le même compte, avec le provider existant :
+
+```ts
+const provider = aws_iam.OidcProviderNative.fromOidcProviderArn(
+    this,
+    "GithubOidcProvider",
+    `arn:aws:iam::${this.account}:oidc-provider/token.actions.githubusercontent.com`,
+);
+new iam.GithubDeployRole(this, "GithubDeployRole", {provider, repository});
+```
+
 ### `lambda.NodejsFunction`
 
 Fonction Lambda TypeScript bundlée avec esbuild, avec les réglages communs des projets.
@@ -181,12 +247,12 @@ new route53.AliasRecordPair(this, "EcodimSiteAliasRecord", {
 
 Bucket S3 privé.
 
-| Prop             | Défaut                                                     |
-|------------------|------------------------------------------------------------|
-| `encryption`     | `S3_MANAGED`                                               |
-| `versioned`      | `true`                                                     |
-| `lifecycleRules` | suppression des versions non courantes après 30 jours      |
-| `removalPolicy`  | `RETAIN`                                                   |
+| Prop             | Défaut                                                |
+|------------------|-------------------------------------------------------|
+| `encryption`     | `S3_MANAGED`                                          |
+| `versioned`      | `true`                                                |
+| `lifecycleRules` | suppression des versions non courantes après 30 jours |
+| `removalPolicy`  | `RETAIN`                                              |
 
 Réglages imposés, absents des props :
 
@@ -198,7 +264,7 @@ Le versioning permet de récupérer un fichier écrasé ou supprimé pendant 30 
 règle par défaut : la reprendre si on veut la garder.
 
 ```ts
-import { s3 } from "@lacolombemons/aws-constructs";
+import {s3} from "@lacolombemons/aws-constructs";
 
 new s3.Bucket(this, "EcodimSiteBucket");
 new s3.Bucket(this, "Uploads", {versioned: false, lifecycleRules: []});
