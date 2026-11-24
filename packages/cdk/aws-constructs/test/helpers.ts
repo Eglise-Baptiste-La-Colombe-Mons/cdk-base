@@ -1,6 +1,9 @@
 import { App, Stack } from "aws-cdk-lib";
 
-export function createStack(): Stack {
-	const app = new App({ context: { "aws:cdk:bundling-stacks": [] } });
-	return new Stack(app, "TestStack", { env: { account: "123456789012", region: "eu-west-1" } });
+export function createApp(): App {
+	return new App({ context: { "aws:cdk:bundling-stacks": [] } });
+}
+
+export function createStack(app: App = createApp(), id = "TestStack"): Stack {
+	return new Stack(app, id, { env: { account: "123456789012", region: "eu-west-1" } });
 }
