@@ -8,7 +8,7 @@
 		},
 		"test": {
 			"dependsOn": ["^build"],
-			"inputs": ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts"]
+			"inputs": ["src/**/*.ts", "test/**/*.ts", "vitest.config.mts", "test/tsconfig.json"]
 		},
 		"package": {
 			"dependsOn": ["build"],
