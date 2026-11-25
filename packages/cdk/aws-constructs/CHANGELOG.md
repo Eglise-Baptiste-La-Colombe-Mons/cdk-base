@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.9.1...aws-constructs-v0.9.2) (2026-11-25)
+
+
+### Bug Fixes
+
+* **tests:** use fictional domains and role names ([#31](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/issues/31)) ([702df21](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/commit/702df21cb864d7f71e32d5de25ea9fbbd39a19fd))
+
 ## [0.9.1](https://github.com/Eglise-Baptiste-La-Colombe-Mons/cdk-base/compare/cdk-base-v0.9.0...aws-constructs-v0.9.1) (2026-11-24)
 
 
