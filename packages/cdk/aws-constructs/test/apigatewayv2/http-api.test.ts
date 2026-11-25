@@ -10,7 +10,7 @@ const DEFAULT_FORMAT =
 const REQUEST_LINK_THROTTLE = { "POST /v1/auth/request-link": { rateLimit: 5, burstLimit: 20 } };
 
 const corsPreflight = {
-	allowOrigins: ["https://ecodim.lacolombemons.be"],
+	allowOrigins: ["https://example.com"],
 	allowMethods: [
 		aws_apigatewayv2.CorsHttpMethod.GET,
 		aws_apigatewayv2.CorsHttpMethod.POST,

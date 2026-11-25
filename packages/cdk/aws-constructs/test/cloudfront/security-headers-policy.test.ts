@@ -5,7 +5,7 @@ import { cloudfront } from "../../src";
 import { createStack } from "../helpers";
 
 const RESOURCE = "AWS::CloudFront::ResponseHeadersPolicy";
-const API = "https://api.ecodim.lacolombemons.be";
+const API = "https://api.example.com";
 
 function config(template: Template): Record<string, unknown> {
 	const resources = Object.values(template.findResources(RESOURCE));
