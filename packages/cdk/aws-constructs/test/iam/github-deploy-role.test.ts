@@ -33,7 +33,7 @@ function ecodimTemplate(): Record<string, unknown> {
 		clientIds: ["sts.amazonaws.com"],
 	});
 	const role = new aws_iam.Role(stack, "GithubDeployRole", {
-		roleName: "ecodim-github-deploy",
+		roleName: "example-github-deploy",
 		maxSessionDuration: Duration.hours(1),
 		assumedBy: new aws_iam.WebIdentityPrincipal(provider.oidcProviderArn, {
 			StringEquals: {
@@ -146,7 +146,7 @@ describe("iam.GithubDeployRole", () => {
 		const role = new iam.GithubDeployRole(stack, "GithubDeployRole", {
 			provider,
 			repository,
-			roleName: "ecodim-github-deploy",
+			roleName: "example-github-deploy",
 		});
 		new CfnOutput(stack, "GithubDeployRoleArn", { value: role.roleArn });
 

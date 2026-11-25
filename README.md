@@ -1,54 +1,55 @@
 # cdk-base
 
-Constructs et stacks CDK partagés par les projets de La Colombe Mons (ecodim-app, jeunesse-app, et les suivants).
-Monorepo structuré comme `constructs` (Necko) : yarn workspaces, turbo, biome, release-please.
-Repo public. Les packages sont publiés sur le registre npm public, sous le scope `@lacolombemons`.
+Constructs CDK partagés par les projets de La Colombe Mons, publiés sur npm sous `@lacolombemons`.
+Monorepo yarn workspaces, turbo, biome, release-please.
 
-| Package                                                        | Contenu                                                                             |
-|----------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| [`@lacolombemons/aws-constructs`](packages/cdk/aws-constructs) | Constructs AWS avec les réglages par défaut issus d'ecodim (un dossier par service) |
-| `packages/tools/tsconfig`                                      | tsconfig commun aux packages (privé)                                                |
-
-## Commandes
+- `packages/cdk/aws-constructs` (`@lacolombemons/aws-constructs`) : constructs AWS avec les réglages par défaut des
+  projets.
+- `packages/tools/tsconfig` : tsconfig commun (privé).
 
 ```bash
-yarn install
-yarn build
-yarn test
-yarn lint      
-yarn lint:fix
+yarn install && yarn build && yarn test && yarn lint
 ```
 
-## Workflow
+## Utiliser `@lacolombemons/aws-constructs`
 
-Une branche par construct (`feat/add-<service>-<construct>-construct`), une PR, une release.
-Chaque construct a ses tests (vitest, dans `test/<service>/<construct>.test.ts`), ajoutés dans la même PR
-que le construct. `yarn test` les lance, et la CI aussi.
-
-Chaque construct est ensuite intégré dans ecodim par un bump de version, un par un. Le `cdk diff` de
-l'intégration doit être vide ou entièrement expliqué, et il est vérifié sur staging avant la prod.
-
-Le hook husky `pre-push` lance `yarn ci` (biome). Les titres de PR doivent suivre Conventional Commits.
-
-## Publier une version
-
-Les commits suivent [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, …).
-Sur `main`, release-please ouvre une PR de release. Une fois mergée, le workflow `Release` publie les packages
-non privés sur npm, avec provenance. Toutes les versions sont liées (`linked-versions`).
-
-Prérequis :
-
-- secret `RELEASE_PLEASE_TOKEN` (un PAT, pour que la PR de release déclenche les checks) ;
-- organisation npm `lacolombemons` ;
-- trusted publishing configuré sur chaque package npm (Settings → Trusted publishing → GitHub Actions,
-  dépôt `Eglise-Baptiste-La-Colombe-Mons/cdk-base`, workflow `release-please.yml`). Aucun token npm n'est stocké.
-  npm ne permet de le configurer que sur un package existant : la toute première version se publie à la main
-  (`npm publish --access public` depuis le dossier du package, après `yarn build`).
-
-## Consommer un package depuis un projet
-
-Aucune authentification n'est nécessaire :
-
-```bash
-yarn workspace @ecodim/infra add @lacolombemons/aws-constructs --exact
+```ts
+import {apigatewayv2, cloudfront, cloudwatch, dynamodb, iam, lambda, s3} from "@lacolombemons/aws-constructs";
 ```
+
+Chaque construct étend la ressource `aws-cdk-lib` correspondante. Les défauts sont dans
+`src/<service>/<construct>.ts`. Une prop passée remplace entièrement le défaut, sans fusion
+(`bundling: {sourceMap: true}` perd `minify: true`).
+
+- **Logical IDs** : les log groups créés par `lambda.NodejsFunction` et `apigatewayv2.HttpApi` sont frères de la
+  ressource (`<id>LogGroup`, `<id>AccessLogs`), pas enfants. `cloudfront.SecurityHeadersPolicy` est la ressource
+  elle-même. Remplacer une ressource existante par le construct, avec le même id, ne la recrée donc pas.
+- **`dynamodb.Table` / `EphemeralTable`** : pas de `tableName` (nom généré, passé au code par variable
+  d'environnement). Migrer depuis `aws_dynamodb.Table` ou retirer un `tableName` remplace la table : migrer les
+  données.
+- **`iam.GithubOidcProvider`** : un seul par compte AWS. Les projets suivants l'importent par ARN et créent seulement
+  leur `iam.GithubDeployRole`.
+- **`iam.GithubDeployRole`** exige les *immutable subject claims* GitHub (`use_immutable_subject: true` sur l'org ou
+  le repo) : `repository` prend `ownerId` et `id`, obtenus avec `gh api repos/<owner>/<repo> --jq '.owner.id, .id'`.
+  Le rôle n'assume que les rôles `cdk-<qualifier>-*` du bootstrap.
+- **`apigatewayv2.HttpApi`** : le throttling et les logs d'accès sont posés sur le `CfnStage` du stage `$default`.
+  Avec `createDefaultStage: false`, ces props lèvent une erreur.
+- **`s3.Bucket`** : accès public bloqué, SSL et TLS 1.2 imposés, non configurables.
+
+## Règles
+
+- **Repo public** : aucune valeur réelle (ID de compte AWS, ARN, domaine, email, nom de ressource ou de paramètre
+  SSM) dans le code, les tests, la doc ou les descriptions de PR. Uniquement des valeurs fictives (`example.com`,
+  `123456789012`, `example-*`).
+- **Un construct par branche** (`feat/add-<service>-<construct>-construct`), avec ses tests dans
+  `test/<service>/<construct>.test.ts`. Son intégration dans un projet doit donner un `cdk diff` vide ou expliqué.
+- **Conventional Commits** pour les titres de PR. `pre-push` lance `yarn ci`.
+- **Breaking changes** : supprimer ou renommer un construct, un export ou une prop, ou changer un défaut d'une façon
+  qui modifie les templates des projets, passe en `feat!:` (ou `fix!:`) avec un footer
+  `BREAKING CHANGE: <ce qui change et comment migrer>`. Jamais en simple `fix:`.
+
+## Release
+
+release-please ouvre une PR de release sur `main`. Une fois mergée, le workflow `Release` publie sur npm via trusted
+publishing (aucun token npm). Prérequis : secret `RELEASE_PLEASE_TOKEN` (PAT) et trusted publishing configuré sur
+chaque package. Un nouveau package se publie une première fois à la main (`npm publish --access public`).
